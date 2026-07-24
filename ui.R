@@ -80,7 +80,7 @@ fluidPage(
             class = "metric-card blue",
             span("Estimated economy"),
             h2(textOutput("predicted_mpg", inline = TRUE)),
-            small("miles per gallon")
+            tags$small("miles per gallon")
           )
         ),
         column(
@@ -89,7 +89,7 @@ fluidPage(
             class = "metric-card orange",
             span("Fuel required"),
             h2(textOutput("gallons_needed", inline = TRUE)),
-            small("gallons")
+            tags$small("gallons")
           )
         ),
         column(
@@ -98,7 +98,7 @@ fluidPage(
             class = "metric-card green",
             span("Estimated fuel cost"),
             h2(textOutput("trip_cost", inline = TRUE)),
-            small("US dollars")
+            tags$small("US dollars")
           )
         )
       ),
