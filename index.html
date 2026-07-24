@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Road Trip Fuel Planner â€” Pitch</title>
+  <style>
+    :root { --navy:#0f172a; --blue:#2563eb; --sky:#e0f2fe; --orange:#f97316; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--navy); font-family:Arial,sans-serif; color:#172554; overflow:hidden; }
+    .deck { width:100vw; height:100vh; }
+    .slide {
+      display:none; width:100%; height:100%; padding:7vh 8vw;
+      background:linear-gradient(135deg,#f8fafc,#e0f2fe); position:relative;
+    }
+    .slide.active { display:block; }
+    .title-slide { background:linear-gradient(125deg,#0f172a,#1d4ed8); color:white; padding-top:20vh; }
+    h1 { color:#172554; font-size:3.2rem; margin:0 0 1.4rem; }
+    .title-slide h1 { color:white; font-size:4rem; }
+    p, li { font-size:1.55rem; line-height:1.45; }
+    li { margin:.65rem 0; }
+    code { color:#9a3412; background:#ffedd5; padding:.12em .3em; border-radius:4px; }
+    pre { font-size:1rem; line-height:1.35; border-radius:10px; padding:14px 18px; overflow:auto; }
+    .r-code { background:#172554; color:#e2e8f0; }
+    .r-output { background:white; color:#166534; border-left:6px solid #22c55e; }
+    .metadata { opacity:.8; }
+    .slide-number { position:absolute; right:3vw; bottom:3vh; color:#64748b; font-weight:bold; }
+    .formula { font-size:1.7rem; text-align:center; margin:1.3rem; color:#1e3a8a; }
+    .controls { position:fixed; bottom:2vh; left:50%; transform:translateX(-50%); z-index:10; }
+    button { border:0; border-radius:999px; padding:10px 18px; margin:0 4px; cursor:pointer; font-weight:bold; }
+    #next { background:var(--orange); color:white; }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide title-slide"><div class="slide-number">1 / 5</div><h1>Road Trip Fuel Planner</h1><p class="metadata">author: Ahmed â€¢ date: July 24, 2026</p><p>Turn a few vehicle details into an understandable fuel budget.</p></section>
+<section class="slide"><div class="slide-number">2 / 5</div><h1>The problem</h1><p>Road-trip planning usually begins with distance, but cost depends on the car.</p>
+<ul>
+<li>Manufacturer MPG may be unavailable or unrealistic for older vehicles.</li>
+<li>Fuel-price changes make mental estimates tedious.</li>
+<li>Comparing vehicle scenarios requires repeating the same calculation.</li>
+</ul>
+<p><strong>Road Trip Fuel Planner</strong> makes the trade-off visible in seconds.</p></section>
+<section class="slide"><div class="slide-number">3 / 5</div><h1>How the application works</h1><p>The user supplies:</p>
+<ul>
+<li>distance and fuel price;</li>
+<li>weight and horsepower;</li>
+<li>cylinders and transmission;</li>
+<li>one-way or round-trip travel.</li>
+</ul>
+<p>The Shiny server predicts MPG from <code>mtcars</code>, then reactively calculates:</p>
+<div class="formula">$$\text{gallons} = \frac{\text{distance}}{\widehat{\text{MPG}}}$$</div>
+<div class="formula">$$\text{cost} = \text{gallons} \times \text{price per gallon}$$</div></section>
+<section class="slide"><div class="slide-number">4 / 5</div><h1>Reproducible calculation</h1><p>The following R expression is evaluated when the presentation is built:</p>
+<pre class="r-code"><code>
+model &lt;- lm(mpg ~ wt + hp + cyl + am, data = mtcars)
+example_car &lt;- data.frame(wt = 3.2, hp = 140, cyl = 6, am = 0)
+example_mpg &lt;- predict(model, example_car)
+round(example_mpg, 1)
+</code></pre>
+<pre class="r-output"><code>
+   1 
+19.8 
+</code></pre>
+<p>For a 500-mile trip with fuel at $3.50:</p>
+<pre class="r-code"><code>
+round(c(
+  gallons = 500 / example_mpg,
+  cost = (500 / example_mpg) * 3.50
+), 2)
+</code></pre>
+<pre class="r-output"><code>
+gallons.1    cost.1 
+     25.2      88.2 
+</code></pre></section>
+<section class="slide"><div class="slide-number">5 / 5</div><h1>Why it is worth using</h1><ul>
+<li><strong>Immediate:</strong> all outputs update when a widget changes.</li>
+<li><strong>Transparent:</strong> the documentation explains every calculation.</li>
+<li><strong>Visual:</strong> the estimated vehicle is highlighted against observed cars.</li>
+<li><strong>Practical:</strong> users can compare trip and vehicle scenarios.</li>
+<li><strong>Honest:</strong> limitations are shown directly in the app.</li>
+</ul>
+<p>Try the application, change one input, and watch the budget respond.</p>
+<p><strong>Source and documentation:</strong> available in the accompanying GitHub repository.</p></section>
+  </main>
+  <nav class="controls">
+    <button id="prev" aria-label="Previous slide">Previous</button>
+    <button id="next" aria-label="Next slide">Next</button>
+  </nav>
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    let current = 0;
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((s, i) => s.classList.toggle("active", i === current));
+    }
+    document.querySelector("#prev").onclick = () => show(current - 1);
+    document.querySelector("#next").onclick = () => show(current + 1);
+    document.addEventListener("keydown", e => {
+      if (["ArrowRight","PageDown"," "].includes(e.key)) show(current + 1);
+      if (["ArrowLeft","PageUp"].includes(e.key)) show(current - 1);
+    });
+    show(0);
+  </script>
+</body>
+</html>
+
