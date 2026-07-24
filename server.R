@@ -60,9 +60,9 @@ function(input, output, session) {
       col = palette,
       xlab = "Horsepower",
       ylab = "Miles per gallon",
-      main = "Observed cars and your estimated vehicle",
-      grid = TRUE
+      main = "Observed cars and your estimated vehicle"
     )
+    grid(col = "#E2E8F0")
 
     points(
       input$horsepower,
