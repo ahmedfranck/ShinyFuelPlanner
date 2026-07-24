@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Road Trip Fuel Planner â€” Pitch</title>
+  <style>
+    :root { --navy:#0f172a; --blue:#2563eb; --sky:#e0f2fe; --orange:#f97316; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--navy); font-family:Arial,sans-serif; color:#172554; overflow:hidden; }
+    .deck { width:100vw; height:100vh; }
+    .slide {
+      display:none; width:100%; height:100%; padding:7vh 8vw;
+      background:linear-gradient(135deg,#f8fafc,#e0f2fe); position:relative;
+    }
+    .slide.active { display:block; }
+    .title-slide { background:linear-gradient(125deg,#0f172a,#1d4ed8); color:white; padding-top:20vh; }
+    h1 { color:#172554; font-size:3.2rem; margin:0 0 1.4rem; }
+    .title-slide h1 { color:white; font-size:4rem; }
+    p, li { font-size:1.55rem; line-height:1.45; }
+    li { margin:.65rem 0; }
+    code { color:#9a3412; background:#ffedd5; padding:.12em .3em; border-radius:4px; }
+    pre { font-size:1rem; line-height:1.35; border-radius:10px; padding:14px 18px; overflow:auto; }
+    .r-code { background:#172554; color:#e2e8f0; }
+    .r-output { background:white; color:#166534; border-left:6px solid #22c55e; }
+    .metadata { opacity:.8; }
+    .slide-number { position:absolute; right:3vw; bottom:3vh; color:#64748b; font-weight:bold; }
+    .formula { font-size:1.7rem; text-align:center; margin:1.3rem; color:#1e3a8a; }
+    .controls { position:fixed; bottom:2vh; left:50%; transform:translateX(-50%); z-index:10; }
+    button { border:0; border-radius:999px; padding:10px 18px; margin:0 4px; cursor:pointer; font-weight:bold; }
+    #next { background:var(--orange); color:white; }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <!-- SLIDES -->
+  </main>
+  <nav class="controls">
+    <button id="prev" aria-label="Previous slide">Previous</button>
+    <button id="next" aria-label="Next slide">Next</button>
+  </nav>
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    let current = 0;
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((s, i) => s.classList.toggle("active", i === current));
+    }
+    document.querySelector("#prev").onclick = () => show(current - 1);
+    document.querySelector("#next").onclick = () => show(current + 1);
+    document.addEventListener("keydown", e => {
+      if (["ArrowRight","PageDown"," "].includes(e.key)) show(current + 1);
+      if (["ArrowLeft","PageUp"].includes(e.key)) show(current - 1);
+    });
+    show(0);
+  </script>
+</body>
+</html>
+
