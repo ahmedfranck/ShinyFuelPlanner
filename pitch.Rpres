@@ -1,0 +1,70 @@
+Road Trip Fuel Planner
+========================================================
+author: Ahmed
+date: July 24, 2026
+width: 1440
+height: 900
+
+Turn a few vehicle details into an understandable fuel budget.
+
+The problem
+========================================================
+
+Road-trip planning usually begins with distance, but cost depends on the car.
+
+- Manufacturer MPG may be unavailable or unrealistic for older vehicles.
+- Fuel-price changes make mental estimates tedious.
+- Comparing vehicle scenarios requires repeating the same calculation.
+
+**Road Trip Fuel Planner** makes the trade-off visible in seconds.
+
+How the application works
+========================================================
+
+The user supplies:
+
+- distance and fuel price;
+- weight and horsepower;
+- cylinders and transmission;
+- one-way or round-trip travel.
+
+The Shiny server predicts MPG from `mtcars`, then reactively calculates:
+
+$$\text{gallons} = \frac{\text{distance}}{\widehat{\text{MPG}}}$$
+
+$$\text{cost} = \text{gallons} \times \text{price per gallon}$$
+
+Reproducible calculation
+========================================================
+
+The following R expression is evaluated when the presentation is built:
+
+```{r}
+model <- lm(mpg ~ wt + hp + cyl + am, data = mtcars)
+example_car <- data.frame(wt = 3.2, hp = 140, cyl = 6, am = 0)
+example_mpg <- predict(model, example_car)
+round(example_mpg, 1)
+```
+
+For a 500-mile trip with fuel at $3.50:
+
+```{r}
+round(c(
+  gallons = 500 / example_mpg,
+  cost = (500 / example_mpg) * 3.50
+), 2)
+```
+
+Why it is worth using
+========================================================
+
+- **Immediate:** all outputs update when a widget changes.
+- **Transparent:** the documentation explains every calculation.
+- **Visual:** the estimated vehicle is highlighted against observed cars.
+- **Practical:** users can compare trip and vehicle scenarios.
+- **Honest:** limitations are shown directly in the app.
+
+Try the application, change one input, and watch the budget respond.
+
+**Source and documentation:** available in the accompanying GitHub repository.
+
